@@ -22,7 +22,9 @@
         {
             services
                 .AddDbContext<TeamDataContext>(options =>
-                    options.UseInMemoryDatabase("teamDb"));
+                    options.UseSqlServer(AppConstansts.DbConnectionString));
+
+            services.AddSingleton<ITeamRepository, TeamRepository>();
 
             services.AddCors();
 

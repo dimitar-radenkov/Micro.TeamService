@@ -3,3 +3,7 @@
 ################################################################################
 
 /TeamService/obj
+/TeamService/bin/Debug/netcoreapp2.1
+/TeamService.Tests/bin/Debug/netcoreapp2.1
+/TeamService.Tests/obj
+/.vs
