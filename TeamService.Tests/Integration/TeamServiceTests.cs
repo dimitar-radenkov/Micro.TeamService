@@ -1,9 +1,11 @@
 ﻿namespace TeamService.Tests.Integration
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
+    using System.Threading.Tasks;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.TestHost;
     using Microsoft.Extensions.DependencyInjection;
@@ -19,23 +21,19 @@
         private TestServer testServer;
         private HttpClient testClient;
 
+        private Mock<ITeamRepository> mockTeamRepository;
+
         [TestInitialize]
         public void Initialize()
         {
+            this.mockTeamRepository = new Mock<ITeamRepository>();
+
             this.testServer = new TestServer(
                 new WebHostBuilder()
                     .UseStartup<Startup>()
                     .ConfigureTestServices(services =>
                     {
-                        var repo = new Mock<ITeamRepository>();
-                        repo
-                            .Setup(x => x.GetAllAsync())
-                            .ReturnsAsync(new List<Team>()
-                            {
-                                new Team{ Name = "1"},
-                            });
-
-                        services.AddSingleton(repo.Object);
+                        services.AddSingleton(this.mockTeamRepository.Object);
                        
                     }));
             
@@ -45,7 +43,12 @@
         [TestMethod]
         public void OnGetAllShouldReturnAllInDatabase()
         {
-            //arrange && act
+            //arrange     
+            this.mockTeamRepository
+                .Setup(x => x.GetAllAsync())
+                .ReturnsAsync(new List<Team> { new Team { Name = "test team" } });
+
+            //act
             var response  = this.testClient.GetAsync("/api/teams").Result;
             response.EnsureSuccessStatusCode(); 
 
@@ -57,6 +60,23 @@
 
             Assert.IsNotNull(teams);
             Assert.AreEqual(1, teams.Count());
+        }
+
+        [TestMethod]
+        public void GetById_WithInvalidId_ShouldReturnNotFound()
+        {
+            //arrange     
+            this.mockTeamRepository
+                .Setup(x => x.GetByIdAsync(It.IsAny<Guid>()))
+                .ReturnsAsync((Team)null);
+
+            var guid = Guid.NewGuid();
+
+            //act
+            var response = this.testClient.GetAsync($"/api/teams/{guid}").Result;
+
+            //assert
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
         }
     }
 }

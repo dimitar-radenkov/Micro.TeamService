@@ -24,7 +24,7 @@
                 .AddDbContext<TeamDataContext>(options =>
                     options.UseSqlServer(AppConstansts.DbConnectionString));
 
-            services.AddSingleton<ITeamRepository, TeamRepository>();
+            services.AddScoped<ITeamRepository, TeamRepository>();
 
             services.AddCors();
 
