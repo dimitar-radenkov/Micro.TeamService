@@ -5,7 +5,6 @@
     using System.Linq;
     using System.Net;
     using System.Net.Http;
-    using System.Threading.Tasks;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.TestHost;
     using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +13,7 @@
     using Newtonsoft.Json;
     using TeamService.Data;
     using TeamService.Models;
+    using TeamService.Models.BindingModels;
 
     [TestClass]
     public class TeamServiceTests
@@ -41,7 +41,7 @@
         }
 
         [TestMethod]
-        public void OnGetAllShouldReturnAllInDatabase()
+        public void GetAll_ShouldReturnAllFromRepository()
         {
             //arrange     
             this.mockTeamRepository
@@ -77,6 +77,31 @@
 
             //assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [TestMethod]
+        public void Create_WithValidBindingModel_ShouldReturnOk()
+        {
+            //arrange     
+            var team = new TeamBindingModel
+            {
+                Name = "test name",
+                Members = new List<Member>
+                {
+                    new Member{ FirstName = "one one", LastName = "one two"},
+                    new Member{ FirstName = "two one", LastName = "two two"}
+                }
+            };
+
+            //act
+            var response = this.testClient.PostAsJsonAsync("/api/teams", team).Result;
+
+            //assert
+            this.mockTeamRepository
+                .Verify(
+                    x => x.AddAsync(It.IsAny<Team>()), 
+                    Times.Once());
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
     }
 }
