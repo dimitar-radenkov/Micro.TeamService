@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "14bc8ec9-583d-475b-910c-36059229bf78",
-		"name": "Team Service",
+		"name": "TeamService",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -96,6 +96,33 @@
 						"api",
 						"teams",
 						"{{teamId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get located member",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:44394/api/teams/{{teamId}}/members/{{memberId}}",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44394",
+					"path": [
+						"api",
+						"teams",
+						"{{teamId}}",
+						"members",
+						"{{memberId}}"
 					]
 				}
 			},
