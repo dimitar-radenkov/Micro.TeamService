@@ -6,6 +6,7 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using TeamService.Clients;
     using TeamService.Data;
     using TeamService.Extensions;
 
@@ -26,6 +27,9 @@
                     options.UseSqlServer(AppConstansts.DbConnectionString));
 
             services.AddScoped<ITeamRepository, TeamRepository>();
+
+            var locationServiceUrl = Configuration.GetSection("locationService:url").Value;
+            services.AddSingleton<ILocationClient>(new HttpLocationClient(locationServiceUrl));
 
             services.AddCors();
 
