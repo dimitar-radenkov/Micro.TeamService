@@ -61,24 +61,8 @@
             };
 
             await this.teamRepository.AddAsync(team);		
-            return this.Ok(newTeam);
+            return this.Ok(team);
         }
-
-        //[HttpPut("{id}")]
-        //public virtual IActionResult UpdateTeam([FromBody]Team team, Guid id)
-        //{
-        //    team.ID = id;
-
-        //    if (this.db.Update(team) == null)
-        //    {
-        //        return this.NotFound();
-        //    }
-
-
-        //    this.db.SaveChanges();
-        //    return this.Ok(team);
-
-        //}
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTeam(Guid id)

@@ -1,0 +1,105 @@
+{
+	"info": {
+		"_postman_id": "14bc8ec9-583d-475b-910c-36059229bf78",
+		"name": "Team Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create team",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\" : \"Radenkov team\",\n\t\"members\" : \n\t[\n\t\t{\n\t\t\t\"FirstName\" : \"Dimitar\",\n\t\t\t\"LastName\" : \"Radenkov\"\n\t\t},\n\t\t\n\t\t{\n\t\t\t\"FirstName\" : \"Alexander\",\n\t\t\t\"LastName\" : \"Radenkov\"\n\t\t}\n\t]\n}"
+				},
+				"url": {
+					"raw": "https://localhost:44394/api/teams",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44394",
+					"path": [
+						"api",
+						"teams"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all teams",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:44394/api/teams",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44394",
+					"path": [
+						"api",
+						"teams"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete team",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:44394/api/teams/{{teamId}}",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44394",
+					"path": [
+						"api",
+						"teams",
+						"{{teamId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

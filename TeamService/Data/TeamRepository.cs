@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using TeamService.Models;
@@ -32,6 +33,9 @@ namespace TeamService.Data
                 return false;
             }
 
+            this.db.Members
+                .Where(m => team.Members.Select(tm => tm.ID).Contains( m.ID))
+                .DeleteFromQuery();
             this.db.Teams.Remove(team);
             this.db.SaveChanges();
 

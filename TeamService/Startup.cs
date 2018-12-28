@@ -7,6 +7,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using TeamService.Data;
+    using TeamService.Extensions;
 
     public class Startup
     {
@@ -43,6 +44,8 @@
             {
                 app.UseHsts();
             }
+
+            app.MigrateDatabase();
 
             app.UseCors(x => x
                 .AllowAnyOrigin()
