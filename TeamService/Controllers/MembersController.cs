@@ -26,7 +26,7 @@ namespace TeamService.Controllers
         [HttpGet]
         public async Task<IActionResult> GetMembers(Guid teamID)
         {
-            var team = await teamRepository.GetByIdAsync(teamID);
+            var team = await this.teamRepository.GetByIdAsync(teamID);
 
             if (team == null)
             {

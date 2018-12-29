@@ -6,8 +6,8 @@ namespace TeamService.Clients
 {
     public interface ILocationClient
     {
-        Task<Location> GetLatestForMember(Guid memberId);
+        Task<Location> GetLatestForMemberAsync(Guid memberId);
 
-        Task<Location> AddLocation(Guid memberId, Location locationRecord);
+        Task<Location> AddLocationAsync(Guid memberId, Location locationRecord);
     }
 }

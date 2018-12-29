@@ -15,7 +15,7 @@ namespace TeamService.Clients
             this.url = url;
         }
 
-        public async Task<Location> AddLocation(Guid memberId, Location location)
+        public async Task<Location> AddLocationAsync(Guid memberId, Location location)
         {
             using (var httpClient = new HttpClient())
             {
@@ -35,7 +35,7 @@ namespace TeamService.Clients
             return null;
         }
 
-        public async Task<Location> GetLatestForMember(Guid memberId)
+        public async Task<Location> GetLatestForMemberAsync(Guid memberId)
         {
             using (var httpClient = new HttpClient())
             {
@@ -46,7 +46,6 @@ namespace TeamService.Clients
                     var location = await response.Content.ReadAsAsync<Location>();
                     return location;
                 }
-
             }
 
             return null;
