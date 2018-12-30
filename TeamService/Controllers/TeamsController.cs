@@ -29,7 +29,6 @@
         public async Task<IActionResult> GetTeam(Guid id)
         {
             var team = await this.teamRepository.GetByIdAsync(id);
-
             if (team == null)
             {
                 return this.NotFound();

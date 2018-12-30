@@ -6,6 +6,8 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using NJsonSchema;
+    using NSwag.AspNetCore;
     using TeamService.Clients;
     using TeamService.Data;
     using TeamService.Extensions;
@@ -28,11 +30,12 @@
 
             services.AddScoped<ITeamRepository, TeamRepository>();
 
-            var locationServiceUrl = Configuration.GetSection("locationService:url").Value;
+            var locationServiceUrl = this.Configuration.GetSection("locationService:url").Value;
             services.AddSingleton<ILocationClient>(new HttpLocationClient(locationServiceUrl));
 
             services.AddCors();
 
+            services.AddSwaggerDocument();
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
@@ -58,6 +61,11 @@
                 .AllowCredentials());
 
             app.UseHttpsRedirection();
+            app.UseSwaggerUi3(settings =>
+            {
+                settings.GeneratorSettings.DefaultPropertyNameHandling =
+                    PropertyNameHandling.CamelCase;
+            });
             app.UseMvc();
         }
     }

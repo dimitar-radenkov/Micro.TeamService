@@ -26,7 +26,7 @@
         [TestInitialize]
         public void Initialize()
         {
-            this.mockTeamRepository = new Mock<ITeamRepository>();
+            this.mockTeamRepository = new Mock<ITeamRepository>();     
 
             this.testServer = new TestServer(
                 new WebHostBuilder()

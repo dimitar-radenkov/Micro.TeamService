@@ -27,7 +27,6 @@ namespace TeamService.Controllers
         public async Task<IActionResult> GetMembers(Guid teamID)
         {
             var team = await this.teamRepository.GetByIdAsync(teamID);
-
             if (team == null)
             {
                 return this.NotFound();
@@ -40,20 +39,18 @@ namespace TeamService.Controllers
         public async Task<IActionResult> GetMember(Guid teamID, Guid memberId)
         {
             var team = await this.teamRepository.GetByIdAsync(teamID);
-
             if (team == null)
             {
-                return this.NotFound();
+                return this.NotFound(teamID);
             }
-
-            
+         
             var member = team.Members.FirstOrDefault(m => m.ID == memberId);
             if (member == null)
             {
-                return this.NotFound();
+                return this.NotFound(memberId);
             }
 
-            var lastLocation = await this.locationClient.GetLatestForMember(member.ID);
+            var lastLocation = await this.locationClient.GetLatestForMemberAsync(member.ID);
             var locatedMember = new LocatedMember
             {
                 ID = member.ID,
