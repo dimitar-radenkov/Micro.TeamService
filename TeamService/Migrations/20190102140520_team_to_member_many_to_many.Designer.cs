@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TeamService.Data;
 
 namespace TeamService.Migrations
 {
     [DbContext(typeof(TeamDataContext))]
-    partial class TeamDataContextModelSnapshot : ModelSnapshot
+    [Migration("20190102140520_team_to_member_many_to_many")]
+    partial class team_to_member_many_to_many
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

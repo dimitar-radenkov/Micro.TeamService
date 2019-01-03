@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Net;
     using System.Net.Http;
+    using System.Threading.Tasks;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.TestHost;
     using Microsoft.Extensions.DependencyInjection;
@@ -22,19 +23,22 @@
         private HttpClient testClient;
 
         private Mock<ITeamRepository> mockTeamRepository;
+        private Mock<IMembersRepository> mockMembersRepository;
 
         [TestInitialize]
         public void Initialize()
         {
-            this.mockTeamRepository = new Mock<ITeamRepository>();     
+            this.mockTeamRepository = new Mock<ITeamRepository>();
+            this.mockMembersRepository = new Mock<IMembersRepository>();
 
             this.testServer = new TestServer(
                 new WebHostBuilder()
                     .UseStartup<Startup>()
                     .ConfigureTestServices(services =>
                     {
+                        services.AddDbContext<TeamDataContext>();
                         services.AddSingleton(this.mockTeamRepository.Object);
-                       
+                        services.AddSingleton(this.mockMembersRepository.Object);                  
                     }));
             
             this.testClient = this.testServer.CreateClient();
@@ -83,14 +87,16 @@
         public void Create_WithValidBindingModel_ShouldReturnOk()
         {
             //arrange     
+            this.mockTeamRepository
+                .Setup(x => x.AddAsync(
+                    It.IsAny<string>(), 
+                    It.IsAny<IEnumerable<Guid>>()))
+                .ReturnsAsync(new Team());
+
             var team = new TeamBindingModel
             {
                 Name = "test name",
-                Members = new List<Member>
-                {
-                    new Member{ FirstName = "one one", LastName = "one two"},
-                    new Member{ FirstName = "two one", LastName = "two two"}
-                }
+                Members = Enumerable.Range(1, 2).Select(x => Guid.NewGuid())              
             };
 
             //act
@@ -99,7 +105,9 @@
             //assert
             this.mockTeamRepository
                 .Verify(
-                    x => x.AddAsync(It.IsAny<Team>()), 
+                    x => x.AddAsync(
+                        It.IsAny<string>(), 
+                        It.IsAny<IEnumerable<Guid>>()), 
                     Times.Once());
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }

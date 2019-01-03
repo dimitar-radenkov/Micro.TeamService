@@ -1,21 +1,23 @@
 ﻿namespace TeamService.Controllers
 {
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using TeamService.Data;
-    using TeamService.Models;
     using TeamService.Models.BindingModels;
 
     [Route("api/[controller]")]
     public class TeamsController : Controller
     {
         private readonly ITeamRepository teamRepository;
+        private readonly IMembersRepository membersRepository;
 
-        public TeamsController(ITeamRepository teamRepository)
+        public TeamsController(
+            ITeamRepository teamRepository, 
+            IMembersRepository membersRepository)
         {
             this.teamRepository = teamRepository;
+            this.membersRepository = membersRepository;
         }
 
         [HttpGet]
@@ -37,7 +39,7 @@
             return this.Ok(team);
         }
 
-        [HttpPost()]
+        [HttpPost]
         public async Task<IActionResult> CreateTeam([FromBody]TeamBindingModel newTeam)
         {
             if (!this.ModelState.IsValid)
@@ -45,21 +47,14 @@
                 return this.BadRequest(this.ModelState);
             }
 
-            var team = new Team
+            var team = await this.teamRepository.AddAsync(
+                newTeam.Name,
+                newTeam.Members);
+            if (team == null)
             {
-                ID = Guid.NewGuid(),
-                Name = newTeam.Name,
-                Members = newTeam.Members.Select(m => 
-                    new Member
-                    {
-                        ID = Guid.NewGuid(),
-                        FirstName = m.FirstName,
-                        LastName = m.LastName,
-                    })
-                    .ToList()
-            };
-
-            await this.teamRepository.AddAsync(team);		
+                return this.BadRequest();
+            }
+            
             return this.Ok(team);
         }
 

@@ -24,11 +24,13 @@
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var connString = this.Configuration.GetSection("Db:connectionString").Value;
             services
                 .AddDbContext<TeamDataContext>(options =>
-                    options.UseSqlServer(AppConstansts.DbConnectionString));
+                    options.UseSqlServer(connString));
 
             services.AddScoped<ITeamRepository, TeamRepository>();
+            services.AddScoped<IMembersRepository, MembersRepository>();
 
             var locationServiceUrl = this.Configuration.GetSection("locationService:url").Value;
             services.AddSingleton<ILocationClient>(new HttpLocationClient(locationServiceUrl));

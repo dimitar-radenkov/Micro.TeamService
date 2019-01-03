@@ -5,9 +5,14 @@
 
     public class Team
     {
-        public string Name { get; set; }
         public Guid ID { get; set; }
-        public ICollection<Member> Members { get; set; }
+        public string Name { get; set; }
+        public ICollection<TeamMember> TeamMembers { get; set; }
+
+        public Team()
+        {
+            this.TeamMembers = new List<TeamMember>();
+        }
 
         public override string ToString() => this.Name;
     }

@@ -16,13 +16,27 @@ namespace TeamService.Data
             this.db = db;
         }
 
-        public async Task<bool> AddAsync(Team team)
+        public async Task<Team> AddAsync(string name, IEnumerable<Guid> members)
         {
-            await this.db.Members.AddRangeAsync(team.Members);
-            await this.db.Teams.AddAsync(team);
-            await this.db.SaveChangesAsync();
+            if(!members.All(x => this.db.Members.Find(x) != null))
+            {
+                //members does not persist in the db
+                return null;
+            }
 
-            return true;
+            var team = new Team
+            {
+                ID = Guid.NewGuid(),
+                Name = name,
+                TeamMembers = members
+                    .Select(id => new TeamMember { MemberId = id })
+                    .ToList()
+            };
+
+            await this.db.Teams.AddAsync(team);
+            this.db.SaveChanges();
+
+            return team;
         }
 
         public async Task<bool> DeleteAsync(Guid id)
@@ -34,7 +48,7 @@ namespace TeamService.Data
             }
 
             this.db.Members
-                .Where(m => team.Members.Select(tm => tm.ID).Contains( m.ID))
+                .Where(m => team.TeamMembers.Select(tm => tm.MemberId).Contains( m.ID))
                 .DeleteFromQuery();
             this.db.Teams.Remove(team);
             this.db.SaveChanges();
@@ -45,15 +59,20 @@ namespace TeamService.Data
         public async Task<IEnumerable<Team>> GetAllAsync()
         {
             return await this.db.Teams
-                .Include(x => x.Members)
+                .Include(x => x.TeamMembers)
                 .ToListAsync();
         }
 
         public async Task<Team> GetByIdAsync(Guid id)
         {
             return await this.db.Teams
-                .Include(x=> x.Members)
+                .Include(x=> x.TeamMembers)
                 .FirstOrDefaultAsync(t => t.ID == id);
+        }
+
+        public Task<Team> UpdateAsync(Guid id, string name, IEnumerable<Guid> members)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -11,7 +11,9 @@ namespace TeamService.Data
 
         Task<Team> GetByIdAsync(Guid id);
 
-        Task<bool> AddAsync(Team team);
+        Task<Team> UpdateAsync(Guid id, string name, IEnumerable<Guid> members);
+
+        Task<Team> AddAsync(string name, IEnumerable<Guid> members);
 
         Task<bool> DeleteAsync(Guid id);
     }
