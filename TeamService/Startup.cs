@@ -8,6 +8,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using NJsonSchema;
     using NSwag.AspNetCore;
+    using AutoMapper;
     using TeamService.Clients;
     using TeamService.Data;
     using TeamService.Extensions;
@@ -36,6 +37,7 @@
             services.AddSingleton<ILocationClient>(new HttpLocationClient(locationServiceUrl));
 
             services.AddCors();
+            services.AddAutoMapper();
 
             services.AddSwaggerDocument();
             services.AddMvc()

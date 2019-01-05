@@ -2,18 +2,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using TeamService.Models;
+using TeamService.Models.ViewModels;
 
 namespace TeamService.Data
 {
     public class TeamRepository : ITeamRepository
     {
         private readonly TeamDataContext db;
+        private readonly IMapper mapper;
 
-        public TeamRepository(TeamDataContext db)
+        public TeamRepository(TeamDataContext db, IMapper mapper)
         {
             this.db = db;
+            this.mapper = mapper;
         }
 
         public async Task<Team> AddAsync(string name, IEnumerable<Guid> members)
@@ -56,10 +60,11 @@ namespace TeamService.Data
             return true;
         }
 
-        public async Task<IEnumerable<Team>> GetAllAsync()
+        public async Task<IEnumerable<TeamViewModel>> GetAllAsync()
         {
             return await this.db.Teams
                 .Include(x => x.TeamMembers)
+                .Select(x => this.mapper.Map<Team, TeamViewModel>(x))
                 .ToListAsync();
         }
 

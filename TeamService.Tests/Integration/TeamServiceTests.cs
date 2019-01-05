@@ -15,6 +15,7 @@
     using TeamService.Data;
     using TeamService.Models;
     using TeamService.Models.BindingModels;
+    using TeamService.Models.ViewModels;
 
     [TestClass]
     public class TeamServiceTests
@@ -50,7 +51,7 @@
             //arrange     
             this.mockTeamRepository
                 .Setup(x => x.GetAllAsync())
-                .ReturnsAsync(new List<Team> { new Team { Name = "test team" } });
+                .ReturnsAsync(new List<TeamViewModel> { new TeamViewModel { Name = "test team" } });
 
             //act
             var response  = this.testClient.GetAsync("/api/teams").Result;

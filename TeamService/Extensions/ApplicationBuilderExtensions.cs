@@ -22,6 +22,7 @@ namespace TeamService.Extensions
                     //context.Database.EnsureDeleted();
                     context.Database.Migrate();
                     context.Database.EnsureCreated();
+                    DbSeeder.Seed(context);
 
                 }
                 catch (Exception ex)

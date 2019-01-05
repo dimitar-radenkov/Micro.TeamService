@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TeamService.Models;
+using TeamService.Models.ViewModels;
 
 namespace TeamService.Data
 {
     public interface ITeamRepository
     {
-        Task<IEnumerable<Team>> GetAllAsync();
+        Task<IEnumerable<TeamViewModel>> GetAllAsync();
 
         Task<Team> GetByIdAsync(Guid id);
 
